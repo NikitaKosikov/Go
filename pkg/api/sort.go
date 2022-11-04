@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	SortByParametersURL = "sortBy"
 	descOrderKey           = "desc"
 	ascOrderKey            = "asc"
 	sortingSeparator       = ","
@@ -18,6 +19,7 @@ type Options struct {
 	Field, Order string
 }
 
+// example: sort_by=email.desc,password.asc
 func ParseSort(sortBy string) ([]Options, error) {
 	if sortBy == "" {
 		return []Options{}, nil

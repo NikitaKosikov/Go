@@ -7,17 +7,16 @@ import (
 	"test/internal/domain"
 	"test/internal/service/dto"
 	"test/pkg/api"
+	apierrors "test/pkg/api/api_errors"
 	"test/pkg/api/auth"
-	"test/pkg/api/params"
 
 	"github.com/gin-gonic/gin"
 )
 
 const (
-	idNameURL           = "id"
-	SortByParametersURL = "sort_by"
-	usersGroup          = "/users"
-	adminGroup          = "/admins"
+	idNameURL  = "id"
+	usersGroup = "/users"
+	adminGroup = "/admins"
 )
 
 func (h *handler) initUsersRoutes(api *gin.RouterGroup) {
@@ -63,7 +62,7 @@ func (h *handler) Create(ctx *gin.Context) {
 		return
 	}
 
-	tokenDTO, err := h.services.Users.Create(ctx, userDTO)
+	tokenDTO, err := h.services.Users.Create(ctx.Request.Context(), userDTO)
 	if err != nil {
 		if errors.Is(err, domain.ErrUserAlreadyExists) {
 			newResponse(ctx, http.StatusBadRequest, err.Error())
@@ -90,17 +89,18 @@ func (h *handler) Create(ctx *gin.Context) {
 func (h *handler) FindOne(ctx *gin.Context) {
 
 	id := ctx.Param(idNameURL)
-	user, err := h.services.Users.FindOne(ctx, id)
+	user, err := h.services.Users.FindOne(ctx.Request.Context(), id)
+	var apiErr *apierrors.ApiError
 	if err != nil {
 		if errors.Is(err, domain.ErrUserNotFound) {
 			newResponse(ctx, http.StatusNotFound, err.Error())
 			return
 		}
-		if errors.Is(err, params.ErrInvalidIdParam) {
+		if errors.As(err, &apiErr) {
 			newResponse(ctx, http.StatusBadRequest, err.Error())
 			return
 		}
-		
+
 		newResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -123,12 +123,17 @@ func (h *handler) FindOne(ctx *gin.Context) {
 // @Router /users [get]
 
 func (h *handler) FindAll(ctx *gin.Context) {
-	sortBy := ctx.Param(SortByParametersURL)
-	filter := ctx.Param(api.FilterByParametersURL)
-	limit := ctx.Param(api.LimitByParametersURL)
-	offset := ctx.Param(api.OffsetByParametersURL)
-	users, err := h.services.Users.FindAll(ctx, limit, offset, filter, sortBy)
+	sortBy := ctx.Request.URL.Query().Get(api.SortByParametersURL)
+	filter := ctx.Request.URL.Query().Get(api.FilterByParametersURL)
+	limit := ctx.Request.URL.Query().Get(api.LimitByParametersURL)
+	offset := ctx.Request.URL.Query().Get(api.OffsetByParametersURL)
+	users, err := h.services.Users.FindAll(ctx.Request.Context(), limit, offset, filter, sortBy)
+	var apiErr *apierrors.ApiError
 	if err != nil {
+		if errors.As(err, &apiErr) {
+			newResponse(ctx, http.StatusBadRequest, err.Error())
+			return
+		}
 		newResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -161,7 +166,7 @@ func (h *handler) Update(ctx *gin.Context) {
 		return
 	}
 
-	err = h.services.Users.Update(ctx, userDTO)
+	err = h.services.Users.Update(ctx.Request.Context(), userDTO)
 	if err != nil {
 		newResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -181,7 +186,7 @@ func (h *handler) Update(ctx *gin.Context) {
 
 func (h *handler) Delete(ctx *gin.Context) {
 	id := ctx.Param(idNameURL)
-	err := h.services.Users.Delete(ctx, id)
+	err := h.services.Users.Delete(ctx.Request.Context(), id)
 	if err != nil {
 		newResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -191,7 +196,7 @@ func (h *handler) Delete(ctx *gin.Context) {
 
 func (h *handler) RefreshToken(ctx *gin.Context) {
 	userId := ctx.Param("id")
-	tokenDTO, err := h.services.Users.RefreshUserToken(ctx, userId)
+	tokenDTO, err := h.services.Users.RefreshUserToken(ctx.Request.Context(), userId)
 	if err != nil {
 		newResponse(ctx, http.StatusInternalServerError, err.Error())
 		return

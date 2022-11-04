@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"test/internal/domain"
 	"test/internal/repository"
 	"test/internal/service/dto"
@@ -10,19 +11,18 @@ import (
 
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-
+//go:generate mockgen -source=service.go -destination=mocks/mock.go -package=mocks
 type Users interface {
-	Create(ctx *gin.Context, userDTO dto.CreateUserDTO) (dto.TokenDTO, error)
-	FindOne(ctx *gin.Context, id string) (domain.User, error)
-	FindAll(ctx *gin.Context, limit, offset, filter, sortBy string) (u []domain.User, err error)
-	Update(ctx *gin.Context, userDTO dto.UpdateUserDTO) error
-	Delete(ctx *gin.Context, id string) error
-	RefreshUserToken(ctx *gin.Context, userId string) (dto.TokenDTO, error)
-	CreateSession(ctx *gin.Context, oid primitive.ObjectID) (dto.TokenDTO, error)
+	Create(ctx context.Context, userDTO dto.CreateUserDTO) (dto.TokenDTO, error)
+	FindOne(ctx context.Context, id string) (domain.User, error)
+	FindAll(ctx context.Context, limit, offset, filter, sortBy string) (u []domain.User, err error)
+	Update(ctx context.Context, userDTO dto.UpdateUserDTO) error
+	Delete(ctx context.Context, id string) error
+	RefreshUserToken(ctx context.Context, userId string) (dto.TokenDTO, error)
+	CreateSession(ctx context.Context, oid primitive.ObjectID) (dto.TokenDTO, error)
 }
 
 type Deps struct {

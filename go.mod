@@ -5,18 +5,18 @@ go 1.19
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/golang/mock v1.4.4
 	github.com/ilyakaznacheev/cleanenv v1.4.0
 	github.com/sirupsen/logrus v1.9.0
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.0
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
 	github.com/swaggo/gin-swagger v1.5.3
 	go.mongodb.org/mongo-driver v1.11.0
-	golang.org/x/oauth2 v0.1.0
+	golang.org/x/oauth2 v0.0.0-20220622183110-fd043fe589d2
 )
 
 require (
-	cloud.google.com/go/compute v1.12.1 // indirect
-	cloud.google.com/go/compute/metadata v0.1.0 // indirect
+	cloud.google.com/go/compute v1.9.0 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

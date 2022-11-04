@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"test/internal/domain"
@@ -9,7 +10,6 @@ import (
 
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -36,10 +36,10 @@ func NewUserRepository(database *mongo.Database, logger *logging.Logger) UserRep
 }
 
 // Create implements user.Storage
-func (d *userRepository) Create(c *gin.Context, user domain.User) (primitive.ObjectID, error) {
+func (d *userRepository) Create(ctx context.Context, user domain.User) (primitive.ObjectID, error) {
 
 	d.logger.Debug("create user")
-	result, err := d.collection.InsertOne(c, &user)
+	result, err := d.collection.InsertOne(ctx, &user)
 	if err != nil {
 		return primitive.ObjectID{}, fmt.Errorf("failed to create user due to error: %v", err)
 	}
@@ -55,11 +55,11 @@ func (d *userRepository) Create(c *gin.Context, user domain.User) (primitive.Obj
 }
 
 // Delete implements user.Storage
-func (d *userRepository) Delete(c *gin.Context, oid primitive.ObjectID) error {
+func (d *userRepository) Delete(ctx context.Context, oid primitive.ObjectID) error {
 	d.logger.Debug("delete user")
 
 	filter := bson.M{"_id": oid}
-	result, err := d.collection.DeleteOne(c, filter)
+	result, err := d.collection.DeleteOne(ctx, filter)
 	if err != nil {
 		return fmt.Errorf("failed to delete user with oid=%s due to error: %v", oid, err)
 	}
@@ -73,19 +73,19 @@ func (d *userRepository) Delete(c *gin.Context, oid primitive.ObjectID) error {
 }
 
 // FindAll implements user.Storage
-func (d *userRepository) FindAll(c *gin.Context, p api.Pagination, filters []api.Filters, sort []api.Options) (u []domain.User, err error) {
+func (d *userRepository) FindAll(ctx context.Context, p api.Pagination, filters []api.Filters, sort []api.Options) (u []domain.User, err error) {
 	options := setSorting(sort).SetSkip(p.Offset)
 	if p.Limit != 0 {
 		options.SetLimit(p.Limit)
 	}
 
 	filter := setFilters(filters)
-	cursor, err := d.collection.Find(c, filter, options)
+	cursor, err := d.collection.Find(ctx, filter, options)
 	if err != nil {
 		return u, fmt.Errorf("failed to find all users due to error:=%v", err)
 	}
 
-	if err = cursor.All(c, &u); err != nil {
+	if err = cursor.All(ctx, &u); err != nil {
 		return u, fmt.Errorf("failed to read all documents from cursor due to error: %v", err)
 
 	}
@@ -94,10 +94,10 @@ func (d *userRepository) FindAll(c *gin.Context, p api.Pagination, filters []api
 }
 
 // FindOne implements user.Storage
-func (d *userRepository) FindOne(c *gin.Context, oid primitive.ObjectID) (u domain.User, err error) {
+func (d *userRepository) FindOne(ctx context.Context, oid primitive.ObjectID) (u domain.User, err error) {
 	d.logger.Debug("find user by id")
 	filter := bson.M{"_id": oid}
-	result := d.collection.FindOne(c, filter)
+	result := d.collection.FindOne(ctx, filter)
 
 	if result.Err() != nil {
 		if errors.Is(result.Err(), mongo.ErrNoDocuments) {
@@ -115,7 +115,7 @@ func (d *userRepository) FindOne(c *gin.Context, oid primitive.ObjectID) (u doma
 }
 
 // Update implements user.Storage
-func (d *userRepository) Update(c *gin.Context, user domain.User) error {
+func (d *userRepository) Update(ctx context.Context, user domain.User) error {
 	d.logger.Debug("Update user")
 	updateQuery := bson.M{}
 	updateQuery["email"] = user.Email
@@ -123,7 +123,7 @@ func (d *userRepository) Update(c *gin.Context, user domain.User) error {
 
 	filter := bson.M{"_id": user.Id}
 
-	result, err := d.collection.UpdateOne(c, filter, bson.D{{Key: "$set", Value: updateQuery}})
+	result, err := d.collection.UpdateOne(ctx, filter, bson.D{{Key: "$set", Value: updateQuery}})
 	if err != nil {
 		return fmt.Errorf("failed to exceute update user query due to error: %v", err)
 	}
@@ -136,24 +136,24 @@ func (d *userRepository) Update(c *gin.Context, user domain.User) error {
 	return nil
 }
 
-func (r *userRepository) SetSession(c *gin.Context, oid primitive.ObjectID, session domain.Session) error {
+func (r *userRepository) SetSession(ctx context.Context, oid primitive.ObjectID, session domain.Session) error {
 	filter := bson.M{"_id": oid}
 	update := bson.M{"$set": bson.M{"session": session, "lastVisitAt": time.Now()}}
 
-	if _, err := r.collection.UpdateOne(c, filter, update); err != nil {
+	if _, err := r.collection.UpdateOne(ctx, filter, update); err != nil {
 		return fmt.Errorf("Failed to store session")
 	}
 	return nil
 }
 
-func (r *userRepository) GetUserByRefreshToken(c *gin.Context, oid primitive.ObjectID) (domain.User, error) {
+func (r *userRepository) GetUserByRefreshToken(ctx context.Context, oid primitive.ObjectID) (domain.User, error) {
 
 	var user domain.User
 	filter := bson.M{
 		"_id":               oid,
 		"session.expiresat": bson.M{"$gt": time.Now()},
 	}
-	if err := r.collection.FindOne(c, filter).Decode(&user); err != nil {
+	if err := r.collection.FindOne(ctx, filter).Decode(&user); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return domain.User{}, domain.ErrUserNotFound
 		}

@@ -1,8 +1,8 @@
 package params
 
 import (
-	"errors"
 	"math"
+	apierrors "test/pkg/api/api_errors"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -11,7 +11,7 @@ const (
 	maxParamId = math.MaxInt32
 )
 
-var ErrInvalidIdParam = errors.New("invalid id param")
+var ErrInvalidIdParam = apierrors.NewApiErr("invalid id param")
 
 func ParseIdToObjectID(id string) (primitive.ObjectID, error) {
 	oid, err := primitive.ObjectIDFromHex(id)
