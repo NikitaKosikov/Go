@@ -1,0 +1,35 @@
+listen:
+  type: port
+  bind_ip: 0.0.0.0
+  port: 4000
+
+mongodb:
+  uri: mongodb://localhost:27017
+  database: test
+  auth_db:
+  username: Knyazrek2
+  password: zivivu08
+
+postgresdb:
+  host: postgresql
+  port: 5432
+  database: test
+  username: Knyazrek2
+  password: zivivu08
+
+auth:
+  password_salt: salt
+  jwt:
+    secret_key: secret
+    access_token_ttl: 15m
+    refresh_token_ttl: 1800m
+
+oauth2:
+  redirect_url: http://localhost:4000/auth/google/callback
+  client_id: 706927070956-02lhpt13n8mo3cjq78k6q9sau46adqb1.apps.googleusercontent.com
+  client_secret: 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
+  scopes: 
+    - openid 
+    - email
+    - profile
+  
