@@ -16,8 +16,8 @@ test:
 test.coverage:
 	go tool cover -func=cover.out
 
-export DB_URI=mongodb://localhost 27019
-export DB_NAME=test
+export DB_URI=mongodb://localhost:27019
+export DB_NAME=testDb
 export CONTAINER_NAME=test_db
 
 test.integration:
