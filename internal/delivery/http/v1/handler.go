@@ -12,19 +12,19 @@ import (
 
 const ()
 
-type handler struct {
+type Handler struct {
 	services     *service.Services
 	tokenManager auth.TokenManager
 }
 
-func NewHandler(services *service.Services, tokenManager auth.TokenManager) *handler {
-	return &handler{
+func NewHandler(services *service.Services, tokenManager auth.TokenManager) *Handler {
+	return &Handler{
 		services:     services,
 		tokenManager: tokenManager,
 	}
 }
 
-func (h *handler) Init() *gin.Engine {
+func (h *Handler) Init() *gin.Engine {
 	router := gin.New()
 
 	router.GET("/auth/google/login", OauthGoogleLogin)
@@ -35,7 +35,7 @@ func (h *handler) Init() *gin.Engine {
 	return router
 }
 
-func (h *handler) initAPI(router *gin.Engine) {
+func (h *Handler) initAPI(router *gin.Engine) {
 	api := router.Group(auth.BasicURL + auth.Version)
 	{
 		h.initUsersRoutes(api)

@@ -19,7 +19,7 @@ const (
 	adminGroup = "/admins"
 )
 
-func (h *handler) initUsersRoutes(api *gin.RouterGroup) {
+func (h *Handler) initUsersRoutes(api *gin.RouterGroup) {
 
 	users := api.Group(usersGroup)
 	{
@@ -53,7 +53,7 @@ func (h *handler) initUsersRoutes(api *gin.RouterGroup) {
 // @Seccess 200 {integer} integer 1
 // @Router /users [post]
 
-func (h *handler) Create(ctx *gin.Context) {
+func (h *Handler) Create(ctx *gin.Context) {
 
 	var userDTO dto.CreateUserDTO
 	err := ctx.BindJSON(&userDTO)
@@ -86,7 +86,7 @@ func (h *handler) Create(ctx *gin.Context) {
 // @Seccess 200 {integer} integer 1
 // @Router /user/:id [get]
 
-func (h *handler) FindOne(ctx *gin.Context) {
+func (h *Handler) FindOne(ctx *gin.Context) {
 
 	id := ctx.Param(idNameURL)
 	user, err := h.services.Users.FindOne(ctx.Request.Context(), id)
@@ -122,7 +122,7 @@ func (h *handler) FindOne(ctx *gin.Context) {
 // @Seccess 200 {integer} integer 1
 // @Router /users [get]
 
-func (h *handler) FindAll(ctx *gin.Context) {
+func (h *Handler) FindAll(ctx *gin.Context) {
 	sortBy := ctx.Request.URL.Query().Get(api.SortByParametersURL)
 	filter := ctx.Request.URL.Query().Get(api.FilterByParametersURL)
 	limit := ctx.Request.URL.Query().Get(api.LimitByParametersURL)
@@ -156,7 +156,7 @@ func (h *handler) FindAll(ctx *gin.Context) {
 // @Seccess 200 {integer} integer 1
 // @Router /users [post]
 
-func (h *handler) Update(ctx *gin.Context) {
+func (h *Handler) Update(ctx *gin.Context) {
 	var userDTO dto.UpdateUserDTO
 	id := ctx.Param(idNameURL)
 	userDTO.Id = id
@@ -184,7 +184,7 @@ func (h *handler) Update(ctx *gin.Context) {
 // @Seccess 200 {integer} integer 1
 // @Router /users [post]
 
-func (h *handler) Delete(ctx *gin.Context) {
+func (h *Handler) Delete(ctx *gin.Context) {
 	id := ctx.Param(idNameURL)
 	err := h.services.Users.Delete(ctx.Request.Context(), id)
 	if err != nil {
@@ -194,7 +194,7 @@ func (h *handler) Delete(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
-func (h *handler) RefreshToken(ctx *gin.Context) {
+func (h *Handler) RefreshToken(ctx *gin.Context) {
 	userId := ctx.Param("id")
 	tokenDTO, err := h.services.Users.RefreshUserToken(ctx.Request.Context(), userId)
 	if err != nil {
