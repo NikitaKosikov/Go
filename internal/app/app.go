@@ -46,7 +46,7 @@ func Run() {
 
 	handlers := v1.NewHandler(services, tokenManager)
 
-	router := handlers.Init(cfg)
+	router := handlers.Init()
 
 	srv := server.NewServer(router, cfg)
 	if err := srv.Run(); !errors.Is(err, http.ErrServerClosed) {

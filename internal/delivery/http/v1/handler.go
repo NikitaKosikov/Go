@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"test/internal/config"
 	"test/internal/service"
 	"test/pkg/api/auth"
 
@@ -25,7 +24,7 @@ func NewHandler(services *service.Services, tokenManager auth.TokenManager) *han
 	}
 }
 
-func (h *handler) Init(cfg *config.Config) *gin.Engine {
+func (h *handler) Init() *gin.Engine {
 	router := gin.New()
 
 	router.GET("/auth/google/login", OauthGoogleLogin)
