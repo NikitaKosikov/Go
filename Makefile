@@ -24,3 +24,6 @@ test.integration:
 	docker run --rm -d  -p 27019:27017 --name test_db -e MONGODB_DATABASE=testDb mongo:4.2.23-bionic
 	go test -v ./tests/
 	docker stop test_db
+
+docker_run:
+	docker run --rm -d  -p 27019:27017 --name test_db -e MONGODB_DATABASE=testDb mongo:4.2.23-bionic
