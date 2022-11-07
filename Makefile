@@ -10,7 +10,7 @@ debug: build
 	docker-compose up --remove-orphans debug
 
 test:
-	go test --short -coverprofile=cover.out -v ./...
+	go test ./...
 	make test.coverage
 
 test.coverage:
@@ -24,6 +24,3 @@ test.integration:
 	docker run --rm -d  -p 27019:27017 --name test_db -e MONGODB_DATABASE=testDb mongo:4.2.23-bionic
 	go test -v ./tests/
 	docker stop test_db
-
-docker_run:
-	docker run --rm -d  -p 27019:27017 --name test_db -e MONGODB_DATABASE=testDb mongo:4.2.23-bionic
