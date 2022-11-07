@@ -27,7 +27,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Install Go
     - uses: actions/setup-go@v2
 
     - name: Checkout code
