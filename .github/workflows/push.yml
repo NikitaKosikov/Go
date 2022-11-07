@@ -25,7 +25,7 @@ jobs:
       run: make build
 
     - name: Unit test
-      run: go test --short
+      run: go test --short ./...
 
     - name: Integration test
       run: go test -v ./tests/
