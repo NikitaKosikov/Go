@@ -24,8 +24,10 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-    - name: Integtation Test
+    - name: Build Container test
       uses: docker/setup-buildx-action@v2
+
+    - name: Integtation Test
       run: make test.integtation
 
     - name: Unit Test
