@@ -10,7 +10,7 @@ debug: build
 	docker-compose up --remove-orphans debug
 
 test:
-	go test ./...
+	go test --short  ./...
 	make test.coverage
 
 test.coverage:
