@@ -15,8 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: recursive
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -25,11 +23,20 @@ jobs:
 
     - name: Build
       run: make build
+  
+  test:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Install Go
+      - uses: actions/setup-go@v2
 
-    - name: Unit Test
-      run: make test
+      - name: Checkout code
+      - uses: actions/checkout@v2
 
-    - name: Integtation Test
-      run: make test.integtation
+      - name: Unit test
+      - run: make test
+
+      - name: Integration test
+      - run: make test.integration
   
     
