@@ -19,8 +19,3 @@ test.coverage:
 export DB_URI=mongodb://localhost:27019
 export DB_NAME=testDb
 export CONTAINER_NAME=test_db
-
-test.integration:
-	docker run --rm -d  -p 27019:27017 --name test_db -e MONGODB_DATABASE=testDb mongo:4.2.23-bionic
-	go test -v ./tests/
-	docker stop test_db

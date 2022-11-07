@@ -26,9 +26,6 @@ jobs:
     - name: Build
       run: make build
 
-    - name: Integtation Test
-      run: make test.integtation
-
     - name: Unit Test
       run: make test
   
