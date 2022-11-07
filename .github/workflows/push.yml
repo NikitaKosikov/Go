@@ -25,18 +25,18 @@ jobs:
       run: make build
   
   test:
-      runs-on: ubuntu-latest
-      steps:
-      - name: Install Go
-      - uses: actions/setup-go@v2
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Go
+    - uses: actions/setup-go@v2
 
-      - name: Checkout code
-      - uses: actions/checkout@v2
+    - name: Checkout code
+    - uses: actions/checkout@v2
 
-      - name: Unit test
-      - run: make test
+    - name: Unit test
+    - run: make test
 
-      - name: Integration test
-      - run: make test.integration
+    - name: Integration test
+    - run: make test.integration
   
     
