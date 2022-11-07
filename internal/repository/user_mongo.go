@@ -67,8 +67,6 @@ func (d *userRepository) Delete(ctx context.Context, oid primitive.ObjectID) err
 		return fmt.Errorf("not found")
 	}
 
-	d.logger.Trace("Deleted %d documents", result.DeletedCount)
-
 	return nil
 }
 
@@ -130,8 +128,6 @@ func (d *userRepository) Update(ctx context.Context, user domain.User) error {
 	if result.MatchedCount == 0 {
 		return domain.ErrUserNotFound
 	}
-
-	d.logger.Trace("Matched %d, Modified %d", result.MatchedCount, result.ModifiedCount)
 
 	return nil
 }
