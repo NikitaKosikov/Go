@@ -10,7 +10,6 @@ import (
 	"test/pkg/api/auth"
 	"test/pkg/api/params"
 	"test/pkg/hash"
-	"test/pkg/logging"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -20,20 +19,18 @@ type UserService struct {
 	repository      repository.UserRepository
 	tokenManager    auth.TokenManager
 	hasher          hash.PasswordHasher
-	logger          *logging.Logger
 	accessTokenTTL  time.Duration
 	refreshTokenTTL time.Duration
 }
 
 func NewUserService(repository repository.UserRepository, tokenManager auth.TokenManager, hasher hash.PasswordHasher,
-	accessTokenTTL, refreshTokenTTL time.Duration, logger *logging.Logger) *UserService {
+	accessTokenTTL, refreshTokenTTL time.Duration) *UserService {
 	return &UserService{
 		repository:      repository,
 		tokenManager:    tokenManager,
 		hasher:          hasher,
 		accessTokenTTL:  accessTokenTTL,
 		refreshTokenTTL: refreshTokenTTL,
-		logger:          logger,
 	}
 }
 

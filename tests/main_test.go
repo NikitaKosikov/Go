@@ -10,7 +10,6 @@ import (
 	"test/pkg/api/auth"
 	"test/pkg/client/mongodb"
 	"test/pkg/hash"
-	"test/pkg/logging"
 	"testing"
 	"time"
 
@@ -67,8 +66,7 @@ func (s *ApiTestSuite) BeforeTest(suiteName, testName string) {
 
 func (s *ApiTestSuite) initDeps() {
 	// Init domain deps
-	logger := logging.GetLogger()
-	repos := repository.NewRepository(s.db, logger)
+	repos := repository.NewRepository(s.db)
 	hasher := hash.NewSHA1Hasher("salt")
 
 	tokenManager, err := auth.NewManager("signing_key")
@@ -84,7 +82,7 @@ func (s *ApiTestSuite) initDeps() {
 
 		AccessTokenTTL:  time.Minute * 15,
 		RefreshTokenTTL: time.Minute * 15,
-	}, logger)
+	})
 
 	s.repos = repos
 	s.services = services

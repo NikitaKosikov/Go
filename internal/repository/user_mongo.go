@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"test/internal/domain"
 	"test/pkg/api"
-	"test/pkg/logging"
 
 	"time"
 
@@ -25,38 +24,31 @@ var _ UserRepository = &userRepository{}
 
 type userRepository struct {
 	collection *mongo.Collection
-	logger     *logging.Logger
 }
 
-func NewUserRepository(database *mongo.Database, logger *logging.Logger) UserRepository {
+func NewUserRepository(database *mongo.Database) UserRepository {
 	return &userRepository{
 		collection: database.Collection(usersCollection),
-		logger:     logger,
 	}
 }
 
 // Create implements user.Storage
 func (d *userRepository) Create(ctx context.Context, user domain.User) (primitive.ObjectID, error) {
 
-	d.logger.Debug("create user")
 	result, err := d.collection.InsertOne(ctx, &user)
 	if err != nil {
 		return primitive.ObjectID{}, fmt.Errorf("failed to create user due to error: %v", err)
 	}
 
-	d.logger.Debug("convert InsertedId to ObjectID")
-
 	if oid, ok := result.InsertedID.(primitive.ObjectID); ok {
 		return oid, nil
 	}
-	d.logger.Trace(user)
 
 	return primitive.ObjectID{}, fmt.Errorf("failed to create user")
 }
 
 // Delete implements user.Storage
 func (d *userRepository) Delete(ctx context.Context, oid primitive.ObjectID) error {
-	d.logger.Debug("delete user")
 
 	filter := bson.M{"_id": oid}
 	result, err := d.collection.DeleteOne(ctx, filter)
@@ -93,7 +85,7 @@ func (d *userRepository) FindAll(ctx context.Context, p api.Pagination, filters 
 
 // FindOne implements user.Storage
 func (d *userRepository) FindOne(ctx context.Context, oid primitive.ObjectID) (u domain.User, err error) {
-	d.logger.Debug("find user by id")
+
 	filter := bson.M{"_id": oid}
 	result := d.collection.FindOne(ctx, filter)
 
@@ -104,7 +96,6 @@ func (d *userRepository) FindOne(ctx context.Context, oid primitive.ObjectID) (u
 		return u, fmt.Errorf("failed to find user by oid=%s, due to error:=%v", oid, result.Err())
 	}
 
-	d.logger.Debug("unmarshal SingleResult to User")
 	if err := result.Decode(&u); err != nil {
 		return u, fmt.Errorf("failed to decode user by oid=%s, from DB due to error: %v", oid, err)
 	}
@@ -114,7 +105,7 @@ func (d *userRepository) FindOne(ctx context.Context, oid primitive.ObjectID) (u
 
 // Update implements user.Storage
 func (d *userRepository) Update(ctx context.Context, user domain.User) error {
-	d.logger.Debug("Update user")
+
 	updateQuery := bson.M{}
 	updateQuery["email"] = user.Email
 	updateQuery["password"] = user.PasswordHash

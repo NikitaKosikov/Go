@@ -4,12 +4,10 @@ import (
 	"context"
 	"test/internal/domain"
 	"test/pkg/api"
-	"test/pkg/logging"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
-
 
 //go:generate mockgen -source=repository.go -destination=mocks/mock.go -package=mocks
 type UserRepository interface {
@@ -26,8 +24,8 @@ type Repository struct {
 	UserRepositiry UserRepository
 }
 
-func NewRepository(db *mongo.Database, logger *logging.Logger) *Repository {
+func NewRepository(db *mongo.Database) *Repository {
 	return &Repository{
-		UserRepositiry: NewUserRepository(db, logger),
+		UserRepositiry: NewUserRepository(db),
 	}
 }

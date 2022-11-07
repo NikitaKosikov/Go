@@ -8,7 +8,6 @@ import (
 	"test/internal/service/dto"
 	"test/pkg/api/auth"
 	"test/pkg/hash"
-	"test/pkg/logging"
 	"testing"
 	"time"
 
@@ -31,7 +30,6 @@ func mockUserService(t *testing.T) (*UserService, *db_mocks.MockUserRepository) 
 		&hash.SHA1Hasher{},
 		1*time.Minute,
 		1*time.Minute,
-		logging.GetLogger(),
 	)
 
 	return userService, userRepoMock

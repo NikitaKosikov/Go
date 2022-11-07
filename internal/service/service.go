@@ -7,7 +7,6 @@ import (
 	"test/internal/service/dto"
 	"test/pkg/api/auth"
 	"test/pkg/hash"
-	"test/pkg/logging"
 
 	"time"
 
@@ -37,9 +36,9 @@ type Services struct {
 	Users           Users
 }
 
-func NewServices(deps Deps, logger *logging.Logger) *Services {
+func NewServices(deps Deps) *Services {
 	usersService := NewUserService(deps.Repos.UserRepositiry, deps.TokenManager, deps.Hasher,
-		deps.AccessTokenTTL, deps.RefreshTokenTTL, logger)
+		deps.AccessTokenTTL, deps.RefreshTokenTTL)
 	return &Services{
 		Users: usersService,
 	}
