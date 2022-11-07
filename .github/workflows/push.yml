@@ -24,8 +24,10 @@ jobs:
     - name: Build
       run: go build -v ./...
 
+    - name: Integtation Test
+      run: make test.integtation
+
     - name: Unit Test
       run: make test
 
-    - name: Integtation Test
-      run: make test.integtation
+    
