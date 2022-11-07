@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -23,22 +23,11 @@ jobs:
 
     - name: Build
       run: make build
-  
-  test:
-      runs-on: ubuntu-latest
-      needs: build
-      steps:
-      - uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.18
+    - name: Unit test
+      run: go test --short -v ./...
 
-      - name: Unit test
-        run: make test
-
-      - name: Integration test
-        run: make test.Integration
+    - name: Integration test
+      run: go test -v ./tests/
   
     
