@@ -35,9 +35,6 @@ type Deps struct {
 
 type Services struct {
 	Users           Users
-	hasher          hash.PasswordHasher
-	AccessTokenTtl  time.Duration
-	RefreshTokenTtl time.Duration
 }
 
 func NewServices(deps Deps, logger *logging.Logger) *Services {
