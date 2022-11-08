@@ -48,7 +48,7 @@ jobs:
     - name: Publish to Registry
       uses: NikitaKosikov/Go@master
       with:
-        name: teest/go-test-api  
+        name: knyazrek2/test  
         username: ${{ secrets.DOCKER_USERNAME }} 
         password: ${{ secrets.DOCKER_PASSWORD }}
   
