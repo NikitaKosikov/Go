@@ -41,7 +41,7 @@ jobs:
       run: go test --short ./...
 
     - name: Integration tests
-      run: make test.integration
+      run: go test ./tests/
 
   
     
