@@ -78,6 +78,7 @@ func TestHandler_Create(t *testing.T) {
 			services := &service.Services{Users: userMockService}
 			handler := NewHandler(services, &auth.Manager{})
 
+			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
 			w := httptest.NewRecorder()
 
@@ -157,6 +158,7 @@ func TestHandler_FindOne(t *testing.T) {
 			services := &service.Services{Users: userMockService}
 			handler := NewHandler(services, &auth.Manager{})
 
+			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
 			w := httptest.NewRecorder()
 
@@ -320,6 +322,7 @@ func TestHandler_FindAll(t *testing.T) {
 			services := &service.Services{Users: userMockService}
 			handler := NewHandler(services, &auth.Manager{})
 
+			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
 			w := httptest.NewRecorder()
 
@@ -357,7 +360,7 @@ func TestHandler_Update(t *testing.T) {
 		{
 			name:      "OK",
 			inputBody: `{"email":"Test","password":"qwerty"}`,
-			id:       "000000000000",
+			id:        "000000000000",
 			inputUser: dto.UpdateUserDTO{
 				Id:       "000000000000",
 				Email:    "Test",
@@ -371,7 +374,7 @@ func TestHandler_Update(t *testing.T) {
 		{
 			name:      "Service Failure",
 			inputBody: `{"email":"Test","password":"qwerty"}`,
-			id:       "000000000000",
+			id:        "000000000000",
 			inputUser: dto.UpdateUserDTO{
 				Id:       "000000000000",
 				Email:    "Test",
@@ -396,6 +399,7 @@ func TestHandler_Update(t *testing.T) {
 			services := &service.Services{Users: userMockService}
 			handler := NewHandler(services, &auth.Manager{})
 
+			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
 			w := httptest.NewRecorder()
 
@@ -451,6 +455,7 @@ func TestHandler_Delete(t *testing.T) {
 			services := &service.Services{Users: userMockService}
 			handler := NewHandler(services, &auth.Manager{})
 
+			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
 			w := httptest.NewRecorder()
 
@@ -508,6 +513,7 @@ func TestHandler_RefreshToken(t *testing.T) {
 			services := &service.Services{Users: userMockService}
 			handler := NewHandler(services, &auth.Manager{})
 
+			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
 			w := httptest.NewRecorder()
 

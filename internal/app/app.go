@@ -14,7 +14,6 @@ import (
 )
 
 func Run() {
-
 	cfg := config.GetConfig()
 
 	mongoClient, err := mongodb.NewClient(cfg.MongodbConfig)
