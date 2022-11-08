@@ -46,7 +46,7 @@ jobs:
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
     - name: Publish to Registry
-      uses: knyazrek2/test@master
+      uses: knyazrek2/test
       with:
         name: teest/go-test-api  
         username: ${{ secrets.DOCKER_USERNAME }} 
