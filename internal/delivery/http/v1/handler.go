@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const ()
-
 type Handler struct {
 	services     *service.Services
 	tokenManager auth.TokenManager
