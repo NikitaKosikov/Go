@@ -1,4 +1,4 @@
-package v1
+package testss
 
 import (
 	"bytes"
@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http/httptest"
+	v1 "test/internal/delivery/http/v1"
 	"test/internal/domain"
 	"test/internal/service"
 	"test/internal/service/dto"
@@ -76,7 +77,7 @@ func TestHandler_Create(t *testing.T) {
 			testCase.mockBehavior(userMockService, testCase.inputUser)
 
 			services := &service.Services{Users: userMockService}
-			handler := NewHandler(services, &auth.Manager{})
+			handler := v1.NewHandler(services, &auth.Manager{})
 
 			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
@@ -156,7 +157,7 @@ func TestHandler_FindOne(t *testing.T) {
 			testCase.mockBehavior(userMockService, testCase.id)
 
 			services := &service.Services{Users: userMockService}
-			handler := NewHandler(services, &auth.Manager{})
+			handler := v1.NewHandler(services, &auth.Manager{})
 
 			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
@@ -320,7 +321,7 @@ func TestHandler_FindAll(t *testing.T) {
 			testCase.mockBehavior(userMockService, testCase.limit, testCase.offset, testCase.filter, testCase.sortBy)
 
 			services := &service.Services{Users: userMockService}
-			handler := NewHandler(services, &auth.Manager{})
+			handler := v1.NewHandler(services, &auth.Manager{})
 
 			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
@@ -397,7 +398,7 @@ func TestHandler_Update(t *testing.T) {
 			testCase.mockBehavior(userMockService, testCase.inputUser)
 
 			services := &service.Services{Users: userMockService}
-			handler := NewHandler(services, &auth.Manager{})
+			handler := v1.NewHandler(services, &auth.Manager{})
 
 			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
@@ -453,7 +454,7 @@ func TestHandler_Delete(t *testing.T) {
 			testCase.mockBehavior(userMockService, testCase.id)
 
 			services := &service.Services{Users: userMockService}
-			handler := NewHandler(services, &auth.Manager{})
+			handler := v1.NewHandler(services, &auth.Manager{})
 
 			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()
@@ -511,7 +512,7 @@ func TestHandler_RefreshToken(t *testing.T) {
 			testCase.mockBehavior(userMockService, testCase.userId)
 
 			services := &service.Services{Users: userMockService}
-			handler := NewHandler(services, &auth.Manager{})
+			handler := v1.NewHandler(services, &auth.Manager{})
 
 			gin.SetMode(gin.ReleaseMode)
 			r := gin.New()

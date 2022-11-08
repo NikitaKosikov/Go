@@ -28,7 +28,7 @@ jobs:
       run: go test -v ./internal/service/...
 
     - name: Unit test delivery
-      run: go test -v ./internal/delivery/http/v1/
+      run: go test -v ./internal/delivery/http/v1/testss/
 
     - name: Integration test
       run: go test ./tests/
