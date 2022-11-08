@@ -36,6 +36,9 @@ type ApiTestSuite struct {
 }
 
 func TestAPISuite(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
 
 	suite.Run(t, new(ApiTestSuite))
 }
