@@ -70,9 +70,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }} 
           envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,CONTAINER_NAME
-          script: |
-            
-            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} $(echo $REGISTRY)
+       
+       
             
           
 
