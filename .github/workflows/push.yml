@@ -60,6 +60,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Echo
+        run: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} 
+
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.3
         with:
