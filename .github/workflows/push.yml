@@ -79,7 +79,7 @@ jobs:
             
             docker rm $(echo $CONTAINER_NAME)
           
-            export AUTH_SERVER_URL=${{ secrets.AUTH_SERVER_URL }}
+            export AUTH_SERVER_URL=${{ secrets.AUTH_SERVER_URL }}  
            
             docker run  AUTH_SERVER_URL -d \
             --restart always \
