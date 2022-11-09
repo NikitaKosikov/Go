@@ -44,7 +44,7 @@ jobs:
       - name: Echo
         run: echo ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Build docker image
+      - name: Build docker image  
         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
         
       - name: Install doctl
