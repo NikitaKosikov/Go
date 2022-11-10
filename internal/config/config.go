@@ -18,8 +18,6 @@ type Config struct {
 }
 
 type ListenConfig struct {
-	Type   string `yaml:"type"`
-	BindIP string `yaml:"bind_ip"`
 	Port   string `yaml:"port"`
 }
 

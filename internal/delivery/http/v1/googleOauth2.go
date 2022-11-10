@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"test/internal/config"
 	"test/internal/service/dto"
 	"time"
 
@@ -16,11 +17,13 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
+var oauth2Config = config.GetConfig().Oauth2Config
+
 var googleOauthConfig = &oauth2.Config{
-	// RedirectURL:  oauth2Config.RedirectURL,
-	// ClientID:     oauth2Config.ClientID,
-	// ClientSecret: oauth2Config.ClientSecret,
-	// Scopes:       oauth2Config.Scopes,
+	RedirectURL:  oauth2Config.RedirectURL,
+	ClientID:     oauth2Config.ClientID,
+	ClientSecret: oauth2Config.ClientSecret,
+	Scopes:       oauth2Config.Scopes,
 	Endpoint: google.Endpoint,
 }
 

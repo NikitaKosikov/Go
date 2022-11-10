@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build docker image  
-        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .          
         
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -74,7 +74,8 @@ jobs:
             docker stop $(echo $CONTAINER_NAME)
             docker rm $(echo $CONTAINER_NAME)
 
-  
+            docker run --rm -d  -p 27019:27017 --name test_db -e MONGODB_DATABASE=testDb mongo
+
             docker run  -d \
             --restart always \
             --publish 80:80 \
