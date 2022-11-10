@@ -70,6 +70,7 @@ jobs:
           script: |
             docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} $(echo $REGISTRY)
 
+
             docker stop $(echo $CONTAINER_NAME)
             docker rm $(echo $CONTAINER_NAME)
 
