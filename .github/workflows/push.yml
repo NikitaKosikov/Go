@@ -74,8 +74,8 @@ jobs:
             docker stop $(echo $CONTAINER_NAME)
             docker rm $(echo $CONTAINER_NAME)
 
-            docker stop test_db
-            docker rm test_db
+            docker stop mongo
+            docker rm mongo
 
             docker run --rm -d  -p 27019:27017 --name test_db -e MONGODB_DATABASE=testDb mongo
 
