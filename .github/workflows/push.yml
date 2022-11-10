@@ -63,11 +63,11 @@ jobs:
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.4
         with:
-          host: ${{ secrets.HOST }}
+          host: 188.166.70.74
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          port: ${{ secrets.PORT }}
-          
+          port: 80
+
        
        
             
