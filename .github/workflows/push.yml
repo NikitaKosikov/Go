@@ -77,7 +77,7 @@ jobs:
             docker stop test_db
             docker rm test_db
 
-            docker run  -d  -p 27017:27017 --name test_db -e MONGODB_DATABASE=testDb mongo
+            docker run  -d  -p 27017:27017 --name test_db -e MONGO_INITDB_ROOT_USERNAME=Knyazrek2 -e MONGO_INITDB_ROOT_PASSWORD=zivivu08 -e MONGODB_DATABASE=test mongo
 
             docker run  -d  -p 4000:4000 --name $(echo $CONTAINER_NAME)  $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
 
