@@ -7,6 +7,7 @@ mongodb:
   auth_db:
   username: Knyazrek2
   password: zivivu08
+  
 
 postgresdb:
   host: postgresql
