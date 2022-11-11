@@ -2,7 +2,7 @@ listen:
   port: 4000
 
 mongodb:
-  uri: mongodb://localhost:27017
+  uri: mongodb://mongodb:27017
   database: test
   auth_db:
   username: Knyazrek2
