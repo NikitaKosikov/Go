@@ -1,5 +1,5 @@
 listen:
-  port: 4000
+  port: 80
 
 mongodb:
   uri: mongodb://localhost:27017
