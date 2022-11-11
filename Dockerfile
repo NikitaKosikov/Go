@@ -13,6 +13,6 @@ WORKDIR /root/
 COPY --from=builder /test/.bin/app .
 COPY --from=builder /test/configs configs/
 
-EXPOSE 80
+EXPOSE 4000
 
 CMD ["./app"] 
