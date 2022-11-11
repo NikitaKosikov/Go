@@ -70,7 +70,9 @@ jobs:
           script: |
             docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} $(echo $REGISTRY)
 
-
+            docker network rm test-network
+            docker network create test-network
+            
             docker stop $(echo $CONTAINER_NAME)
             docker rm $(echo $CONTAINER_NAME)
 
@@ -78,9 +80,10 @@ jobs:
             docker rm test_db
 
             docker run  -d  -p 27017:27017 --name test_db -e MONGO_INITDB_ROOT_USERNAME=Knyazrek2 -e MONGO_INITDB_ROOT_PASSWORD=zivivu08 -e MONGODB_DATABASE=test mongo
-            sleep 5
-            docker run  -d  -p 4000:4000 --name $(echo $CONTAINER_NAME)  $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+            docker network connect test-network test_db
 
+            docker run  -d  -p 4000:4000 --name $(echo $CONTAINER_NAME)  $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+            docker network connect test-network $(echo $CONTAINER_NAME)
 
           
        
