@@ -79,7 +79,7 @@ jobs:
 
             docker run --rm -d  -p 188.166.70.74:27019:27017 --name test_db -e MONGODB_DATABASE=testDb mongo
 
-            docker run  -d  -p 80:80 --name $(echo $CONTAINER_NAME)  $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+            docker run  -d  -p 188.166.70.74:80:80 --name $(echo $CONTAINER_NAME)  $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
 
 
           
