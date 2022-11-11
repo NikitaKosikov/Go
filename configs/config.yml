@@ -2,7 +2,7 @@ listen:
   port: 80
 
 mongodb:
-  uri: mongodb://188.166.70.74:27017
+  uri: mongodb://localhost:27017
   database: test
   auth_db:
   username: Knyazrek2
