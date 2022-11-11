@@ -7,7 +7,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
-const configPath = "../../configs/config.yml"
+const configPath = "configs/config.yml"
 
 type Config struct {
 	ListenConfig     `yaml:"listen"`
