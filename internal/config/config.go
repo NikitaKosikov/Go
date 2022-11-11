@@ -7,7 +7,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
-const configPath = "D:\\GolangProjects\\try\\test\\configs\\config.yml"
+const configPath = "../../configs/config.yml"
 
 type Config struct {
 	ListenConfig     `yaml:"listen"`
@@ -18,7 +18,7 @@ type Config struct {
 }
 
 type ListenConfig struct {
-	Port   string `yaml:"port"`
+	Port string `yaml:"port"`
 }
 
 type MongodbConfig struct {

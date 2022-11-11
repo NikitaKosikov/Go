@@ -2,11 +2,11 @@ listen:
   port: 80
 
 mongodb:
-  uri: mongodb://localhost:27017
+  uri: mongodb://188.166.70.74:27017
   database: test
   auth_db:
-  username: 
-  password: 
+  username: Knyazrek2
+  password: zivivu08
 
 postgresdb:
   host: postgresql
