@@ -11,7 +11,7 @@ on:
 
 env:
   REGISTRY: "registry.digitalocean.com/test-testing"
-  IMAGE_NAME: test-api"
+  IMAGE_NAME: "api"
   CONTAINER_APP_NAME: "api-container"
   CONTAINER_MONGODB_NAME: "mongodb-container"
   NETWORK_MONGODB_APP: "mongodb-app-network"
