@@ -11,8 +11,10 @@ on:
 
 env:
   REGISTRY: "registry.digitalocean.com/test-testing"
-  IMAGE_NAME: "test-api"
-  CONTAINER_NAME: "test-api-container"
+  IMAGE_NAME: api"
+  CONTAINER_APP_NAME: "api-container"
+  CONTAINER_MONGODB_NAME: "mongodb-container"
+  NETWORK_MONGODB_APP: "mongodb-app-network"
 
 
 jobs:
@@ -66,21 +68,21 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,CONTAINER_NAME 
+          envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,CONTAINER_APP_NAME,CONTAINER_MONGODB_NAME,NETWORK_MONGODB_APP
           script: |
             docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} $(echo $REGISTRY)
 
-            docker network rm test-network
-            docker network create test-network
+            docker network rm  $(echo $NETWORK_MONGODB_APP)
+            docker network create  $(echo $NETWORK_MONGODB_APP)
             
-            docker stop $(echo $CONTAINER_NAME)
-            docker rm $(echo $CONTAINER_NAME)
+            docker stop $(echo $CONTAINER_APP_NAME)
+            docker rm $(echo $CONTAINER_APP_NAME)
 
-            docker stop test_db
-            docker rm test_db
+            docker stop $(echo $CONTAINER_MONGODB_NAME)
+            docker rm $(echo $CONTAINER_MONGODB_NAME)
 
-            docker run  -d  -p 27017:27017 --net test-network --name test_db -e MONGO_INITDB_ROOT_USERNAME=Knyazrek2 -e MONGO_INITDB_ROOT_PASSWORD=zivivu08 -e MONGODB_DATABASE=test mongo
-            docker run  -d  -p 4000:4000 --net test-network  --name $(echo $CONTAINER_NAME)  $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+            docker run  -d  -p 27017:27017 --net $(echo $NETWORK_MONGODB_APP) --name $(echo $CONTAINER_MONGODB_NAME) -e MONGO_INITDB_ROOT_USERNAME=Knyazrek2 -e MONGO_INITDB_ROOT_PASSWORD=zivivu08 -e MONGODB_DATABASE=test mongo
+            docker run  -d  -p 4000:4000 --net $(echo $NETWORK_MONGODB_APP)  --name $(echo $CONTAINER_APP_NAME)  $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
            
 
           
