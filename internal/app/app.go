@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"test/internal/config"
 	v1 "test/internal/delivery/http/v1"
@@ -18,8 +19,9 @@ func Run() {
 
 	mongoClient, err := mongodb.NewClient(cfg.MongodbConfig)
 	if err != nil {
-		return
+		log.Fatal(err)
 	}
+	
 
 	db := mongoClient.Database(cfg.MongodbConfig.Database)
 	repository := repository.NewRepository(db)
