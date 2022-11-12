@@ -10,8 +10,8 @@ FROM alpine:latest
 
 WORKDIR /root/
 
-COPY --from=0 /github.com/zhashkevych/telegram-pocket-bot/.bin/bot .
-COPY --from=0 /github.com/zhashkevych/telegram-pocket-bot/configs configs/
+COPY --from=builder /test/.bin/app .
+COPY --from=builder /test/configs configs/
 
 EXPOSE 4000
 
