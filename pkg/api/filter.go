@@ -84,7 +84,7 @@ func validOperation(operation string) error {
 	case opearatorAnd:
 	case opearatorOr:
 	default:
-		return fmt.Errorf("invalid operator")
+		return fmt.Errorf("invalid filter operator")
 	}
 	return nil
 }

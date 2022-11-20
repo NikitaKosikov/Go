@@ -280,10 +280,10 @@ func TestHandler_FindAll(t *testing.T) {
 			filter: "email[ewqeq]=email,password[eq]=password",
 			sortBy: "email.desc,password.asc",
 			mockBehavior: func(s *mocks.MockUsers, limit, offset, filter, sortBy string) {
-				s.EXPECT().FindAll(context.Background(), limit, offset, filter, sortBy).Return([]domain.User{}, apierrors.ErrFilterInvalid)
+				s.EXPECT().FindAll(context.Background(), limit, offset, filter, sortBy).Return([]domain.User{}, fmt.Errorf("invalid filter operator"))
 			},
 			expectedStatusCode:  400,
-			expectedRequestBody: `{"message":"filter query parameter is no valid number"}`,
+			expectedRequestBody: `{"message":"invalid filter operator"}`,
 		},
 		{
 			name:   "Sorting Invalid",
