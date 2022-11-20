@@ -271,7 +271,7 @@ func TestHandler_FindAll(t *testing.T) {
 				s.EXPECT().FindAll(context.Background(), limit, offset, filter, sortBy).Return([]domain.User{}, apierrors.ErrFilterInvalid)
 			},
 			expectedStatusCode:  400,
-			expectedRequestBody: `{"message":"filter query parameter is no valid number"}`,
+			expectedRequestBody: `{"message":"malformed filter query parameter, should be field[operator]=value"}`,
 		},
 		{
 			name:   "Filter Operation Invalid",
