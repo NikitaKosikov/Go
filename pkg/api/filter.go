@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 	apierrors "test/pkg/api/api_errors"
@@ -42,7 +41,7 @@ func ParseFilters(filter string) ([]Filters, error) {
 // TODO:
 func appendFilters(flt []string) ([]Filters, error) {
 	re := regexp.MustCompile("\\[.+\\]=")
-	filters:=make([]Filters, 0)
+	filters := make([]Filters, 0)
 	for _, f := range flt {
 
 		fieldValue := re.Split(f, -1)
