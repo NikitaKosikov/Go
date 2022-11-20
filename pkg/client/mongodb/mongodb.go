@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"log"
 	"test/internal/config"
 	"time"
 
@@ -36,7 +35,6 @@ func NewClient(mc config.MongodbConfig) (db *mongo.Client, err error) {
 	}
 
 	if err = client.Ping(context.Background(), nil); err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 

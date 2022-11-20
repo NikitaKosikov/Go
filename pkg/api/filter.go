@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	apierrors "test/pkg/api/api_errors"
 )
 
 const (
@@ -33,7 +34,7 @@ func ParseFilters(filter string) ([]Filters, error) {
 	convertedFilters := strings.Split(filter, FiltersSeparator)
 	filteres, err := appendFilters(convertedFilters)
 	if err != nil {
-		return []Filters{}, fmt.Errorf("filter query parameter is no valid number")
+		return []Filters{}, err
 	}
 	return filteres, nil
 }
@@ -47,7 +48,7 @@ func appendFilters(flt []string) ([]Filters, error) {
 		fieldValue := re.Split(f, -1)
 
 		if len(fieldValue) != 2 {
-			return []Filters{}, fmt.Errorf("malformed filter query parameter, should be field.orderdirection")
+			return []Filters{}, apierrors.ErrFilterInvalid
 		}
 
 		field, value := fieldValue[0], fieldValue[1]
@@ -55,7 +56,7 @@ func appendFilters(flt []string) ([]Filters, error) {
 		start := strings.Index(f, "[")
 		end := strings.Index(f, "]")
 		if start == -1 || end == -1 {
-			return []Filters{}, fmt.Errorf("filter parameters invalid")
+			return []Filters{}, apierrors.ErrFilterInvalid
 		}
 		operation := f[start+1 : end]
 

@@ -35,7 +35,6 @@ func mockUserService(t *testing.T) (*UserService, *db_mocks.MockUserRepository) 
 	return userService, userRepoMock
 }
 
-// TODO: expectedResult
 func TestUserRepository_Create(t *testing.T) {
 	userService, userRepoMock := mockUserService(t)
 	type mockRepoBehavior func(dbmock *db_mocks.MockUserRepository)
@@ -43,7 +42,7 @@ func TestUserRepository_Create(t *testing.T) {
 	testTable := []struct {
 		name               string
 		userDTO            dto.CreateUserDTO
-		expectedResult     interface{}
+		expectedResult     dto.TokenDTO
 		mockRepoBehavior   mockRepoBehavior
 		assertServiceTests func() []func(t *testing.T, err error, i ...interface{})
 	}{
@@ -159,7 +158,7 @@ func TestUserRepository_FindOne(t *testing.T) {
 	testTable := []struct {
 		name               string
 		id                 string
-		expectedResult     interface{}
+		expectedResult     domain.User
 		mockRepoBehavior   mockRepoBehavior
 		assertServiceTests func() []func(t *testing.T, err error, i ...interface{})
 	}{
@@ -235,7 +234,7 @@ func TestUserRepository_FindAll(t *testing.T) {
 		offset             string
 		filter             string
 		sortBy             string
-		expectedResult     interface{}
+		expectedResult     []domain.User
 		mockRepoBehavior   mockRepoBehavior
 		assertServiceTests func() []func(t *testing.T, err error, i ...interface{})
 	}{
@@ -352,7 +351,7 @@ func TestUserRepository_FindAll(t *testing.T) {
 			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
 				return []func(t *testing.T, err error, i ...interface{}){
 					func(t *testing.T, err error, i ...interface{}) {
-						assert.Error(t, err, "invalid operator")
+						assert.Error(t, err, "malformed filter query parameter, should be field[operator]=value")
 					},
 				}
 			},
@@ -427,7 +426,6 @@ func TestUserRepository_Update(t *testing.T) {
 	testTable := []struct {
 		name               string
 		userDTO            dto.UpdateUserDTO
-		expectedResult     interface{}
 		mockRepoBehavior   mockRepoBehavior
 		assertServiceTests func() []func(t *testing.T, err error, i ...interface{})
 	}{
@@ -551,7 +549,6 @@ func TestUserRepository_Delete(t *testing.T) {
 	testTable := []struct {
 		name               string
 		id                 string
-		expectedResult     interface{}
 		mockRepoBehavior   mockRepoBehavior
 		assertServiceTests func() []func(t *testing.T, err error, i ...interface{})
 	}{

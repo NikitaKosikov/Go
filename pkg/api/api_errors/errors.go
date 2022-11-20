@@ -4,7 +4,7 @@ import "errors"
 
 var ErrLimitInvalid = NewApiErr("limit query parameter is no valid number")
 var ErrOffsetInvalid = NewApiErr("offset query parameter is no valid number")
-var ErrFilterInvalid = NewApiErr("filter query parameter is no valid number")
+var ErrFilterInvalid = NewApiErr("malformed filter query parameter, should be field[operator]=value")
 var ErrSortByInvalid = NewApiErr("sortBy query parameter is no valid number")
 
 type ApiError struct {

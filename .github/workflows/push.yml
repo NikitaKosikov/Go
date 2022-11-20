@@ -29,6 +29,11 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Setup Golang with cache
+        uses: magnetikonline/action-golang-cache@v3
+        with:
+          go-version-file: go.mod
     
       - name: Unit tests
         run: go test --short ./...
