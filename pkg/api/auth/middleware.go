@@ -21,7 +21,7 @@ func (m *Manager) VerifyJWTMiddleware(roles ...string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		jwtToken, err := parseAuthHeader(ctx)
 		if err != nil {
-			ctx.Next()
+			return
 		}
 		userid := ctx.Param(IdNameURL)
 		claims := &Claims{}
