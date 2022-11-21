@@ -28,7 +28,7 @@ func (m *Manager) VerifyJWTMiddleware(roles ...string) gin.HandlerFunc {
 		token, err := m.GetTokenFromString(jwtToken, claims)
 		if err != nil {
 			ctx.Redirect(http.StatusTemporaryRedirect, userURLAPI+userid+refreshTokenURI)
-			ctx.Next()
+			return
 		}
 		if err := m.ValidateToken(token, claims); err != nil {
 			ctx.Status(http.StatusForbidden)
