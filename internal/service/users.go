@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"test/internal/domain"
 	"test/internal/repository"
 	"test/internal/service/dto"
@@ -44,12 +43,11 @@ func (s *UserService) Create(ctx context.Context, userDTO dto.CreateUserDTO) (dt
 	}
 
 	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
-		if !errors.Is(err, mongo.ErrNoDocuments) {
-			log.Default().Print(err)
+		if !errors.Is(err, domain.ErrUserNotFound) {
 			return dto.TokenDTO{}, err
 		}
 	} else {
-		
+
 		return dto.TokenDTO{}, domain.ErrUserAlreadyExists
 	}
 
