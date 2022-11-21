@@ -31,9 +31,11 @@ func (s *ApiTestSuite) TestUserCreate() {
 	err := s.db.Collection("users").FindOne(context.Background(), bson.M{"email": email}).Decode(&user)
 	s.NoError(err)
 
+	passwordHash, err := s.hasher.Hash(password)
 	s.NoError(err)
 
 	r.Equal(email, user.Email)
+	r.Equal(passwordHash, user.PasswordHash)
 }
 
 func (s *ApiTestSuite) TestUserFindOne() {

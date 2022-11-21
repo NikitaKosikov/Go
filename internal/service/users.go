@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"test/internal/domain"
 	"test/internal/repository"
 	"test/internal/service/dto"
@@ -39,14 +40,17 @@ func NewUserService(repository repository.UserRepository, tokenManager auth.Toke
 func (s *UserService) Create(ctx context.Context, userDTO dto.CreateUserDTO) (dto.TokenDTO, error) {
 
 	if !dto.ValidCreateUserDTO(userDTO) {
+		log.Fatal("Email")
 		return dto.TokenDTO{}, fmt.Errorf("Invalid userDTO parameters")
 	}
 
 	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
 		if !errors.Is(err, mongo.ErrNoDocuments) {
+			log.Fatal("ex")
 			return dto.TokenDTO{}, err
 		}
 	} else {
+		log.Fatal("no")
 		return dto.TokenDTO{}, domain.ErrUserAlreadyExists
 	}
 
