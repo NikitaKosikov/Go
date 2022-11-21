@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UserService struct {
@@ -117,7 +116,7 @@ func (s *UserService) Update(ctx context.Context, userDTO dto.UpdateUserDTO) err
 	}
 
 	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
-		if !errors.Is(err, mongo.ErrNoDocuments) {
+		if !errors.Is(err, domain.ErrUserNotFound) {
 			return err
 		}
 	} else {
