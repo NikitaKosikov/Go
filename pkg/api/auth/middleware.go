@@ -42,6 +42,7 @@ func (m *Manager) VerifyJWTMiddleware(roles ...string) gin.HandlerFunc {
 		}
 		return
 	}
+	
 }
 
 func parseAuthHeader(ctx *gin.Context) (string, error) {
