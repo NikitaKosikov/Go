@@ -40,17 +40,17 @@ func NewUserService(repository repository.UserRepository, tokenManager auth.Toke
 func (s *UserService) Create(ctx context.Context, userDTO dto.CreateUserDTO) (dto.TokenDTO, error) {
 
 	if !dto.ValidCreateUserDTO(userDTO) {
-		log.Fatal("Email")
+		log.Default().Print("e")
 		return dto.TokenDTO{}, fmt.Errorf("Invalid userDTO parameters")
 	}
 
 	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
 		if !errors.Is(err, mongo.ErrNoDocuments) {
-			log.Fatal("ex")
+			log.Default().Print("em")
 			return dto.TokenDTO{}, err
 		}
 	} else {
-		log.Fatal("no")
+		log.Default().Print("emm")
 		return dto.TokenDTO{}, domain.ErrUserAlreadyExists
 	}
 
