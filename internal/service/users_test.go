@@ -14,6 +14,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func mockUserService(t *testing.T) (*UserService, *db_mocks.MockUserRepository) {
@@ -96,8 +97,8 @@ func TestUserRepository_Create(t *testing.T) {
 			},
 		},
 		{
-			name:             "Password Invalid",
-			userDTO:          dto.CreateUserDTO{Email: "test@test.ru", Password: "test"},
+			name:    "Password Invalid",
+			userDTO: dto.CreateUserDTO{Email: "test@test.ru", Password: "test"},
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
 				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, nil)
 			},
@@ -110,8 +111,8 @@ func TestUserRepository_Create(t *testing.T) {
 			},
 		},
 		{
-			name:             "Hash Error",
-			userDTO:          dto.CreateUserDTO{Email: "test@test.ru", Password: ""},
+			name:    "Hash Error",
+			userDTO: dto.CreateUserDTO{Email: "test@test.ru", Password: ""},
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
 				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, nil)
 			},
@@ -528,7 +529,7 @@ func TestUserRepository_Update(t *testing.T) {
 
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
 				dbmock.EXPECT().Update(context.Background(), gomock.Any()).Return(nil)
-				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, nil)
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, mongo.ErrNoDocuments)
 			},
 			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
 				return []func(t *testing.T, err error, i ...interface{}){
@@ -567,7 +568,7 @@ func TestUserRepository_Update(t *testing.T) {
 				Password: "test1234",
 			},
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
-				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, nil)
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{},  mongo.ErrNoDocuments)
 			},
 			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
 				return []func(t *testing.T, err error, i ...interface{}){
@@ -601,7 +602,7 @@ func TestUserRepository_Update(t *testing.T) {
 				Password: "",
 			},
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
-				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, nil)
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{},  mongo.ErrNoDocuments)
 			},
 			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
 				return []func(t *testing.T, err error, i ...interface{}){
@@ -619,7 +620,7 @@ func TestUserRepository_Update(t *testing.T) {
 				Password: "test1234",
 			},
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
-				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, nil)
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{},  mongo.ErrNoDocuments)
 			},
 			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
 				return []func(t *testing.T, err error, i ...interface{}){
@@ -633,7 +634,7 @@ func TestUserRepository_Update(t *testing.T) {
 			name: "Repository Failure",
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
 				dbmock.EXPECT().Create(context.Background(), gomock.Any()).Return(primitive.ObjectID{}, fmt.Errorf("repository failure"))
-				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, nil)
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{},  mongo.ErrNoDocuments)
 			},
 			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
 				return []func(t *testing.T, err error, i ...interface{}){
