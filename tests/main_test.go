@@ -65,7 +65,6 @@ func (s *ApiTestSuite) BeforeTest(suiteName, testName string) {
 }
 
 func (s *ApiTestSuite) initDeps() {
-	// Init domain deps
 	repos := repository.NewRepository(s.db)
 	hasher := hash.NewSHA1Hasher("salt")
 

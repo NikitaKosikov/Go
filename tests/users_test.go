@@ -154,6 +154,7 @@ func (s *ApiTestSuite) TestUserUpdate() {
 	resp := httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
 
+	r.Equal(http.StatusOK, resp.Result().StatusCode)
 
 	var user domain.User
 	err = s.db.Collection("users").FindOne(context.Background(), bson.M{"_id": id}).Decode(&user)
