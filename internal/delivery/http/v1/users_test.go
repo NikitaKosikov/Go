@@ -43,6 +43,7 @@ func TestHandler_Create(t *testing.T) {
 					AccessToken:  "Rand string",
 					RefreshToken: "Rand string",
 				}, nil)
+				
 			},
 			expectedStatusCode: 201,
 		},
