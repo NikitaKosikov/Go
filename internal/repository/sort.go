@@ -8,6 +8,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+
+const (
+	descMongoDbKey = "-1"
+	ascMongoDbKey  = "1"
+	DescOrderKey   = "desc"
+)
+
 func setSorting(sortOptions []api.Options) *options.FindOptions {
 	if sortOptions==nil || len(sortOptions)==0{
 		return &options.FindOptions{}
@@ -21,7 +28,7 @@ func setSorting(sortOptions []api.Options) *options.FindOptions {
 }
 
 func convertSortOrder(order string) string {
-	if strings.ToLower(order) == descOrderKey {
+	if strings.ToLower(order) == DescOrderKey {
 		return descMongoDbKey
 	}
 	return ascMongoDbKey

@@ -47,6 +47,19 @@ func TestHandler_Create(t *testing.T) {
 			expectedStatusCode: 201,
 		},
 		{
+			name:      "User already exist",
+			inputBody: `{"email":"Test","password":"qwerty"}`,
+			inputUser: dto.CreateUserDTO{
+				Email:    "Test",
+				Password: "qwerty",
+			},
+			mockBehavior: func(s *mocks.MockUsers, userDTO dto.CreateUserDTO) {
+				s.EXPECT().Create(context.Background(), userDTO).Return(dto.TokenDTO{}, domain.ErrUserAlreadyExists)
+			},
+			expectedStatusCode:  400,
+			expectedRequestBody: `{"message":"user with such email already exists"}`,
+		},
+		{
 			name:                "Empty fields",
 			mockBehavior:        func(s *mocks.MockUsers, userDTO dto.CreateUserDTO) {},
 			expectedStatusCode:  400,
@@ -370,6 +383,21 @@ func TestHandler_Update(t *testing.T) {
 				s.EXPECT().Update(context.Background(), userDTO).Return(nil)
 			},
 			expectedStatusCode: 200,
+		},
+		{
+			name:      "User with this email already exist",
+			inputBody: `{"email":"Test","password":"qwerty"}`,
+			id:        "000000000000",
+			inputUser: dto.UpdateUserDTO{
+				Id:       "000000000000",
+				Email:    "Test",
+				Password: "qwerty",
+			},
+			mockBehavior: func(s *mocks.MockUsers, userDTO dto.UpdateUserDTO) {
+				s.EXPECT().Update(context.Background(), userDTO).Return(domain.ErrUserAlreadyExists)
+			},
+			expectedStatusCode:  400,
+			expectedRequestBody: `{"message":"user with such email already exists"}`,
 		},
 		{
 			name:      "Service Failure",

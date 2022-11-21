@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"test/internal/domain"
 	"test/internal/repository"
@@ -13,6 +14,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UserService struct {
@@ -40,6 +42,9 @@ func (s *UserService) Create(ctx context.Context, userDTO dto.CreateUserDTO) (dt
 		return dto.TokenDTO{}, fmt.Errorf("Invalid userDTO parameters")
 	}
 
+	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
+		return dto.TokenDTO{}, domain.ErrUserAlreadyExists
+	}
 	passwordHash, err := s.hasher.Hash(userDTO.Password)
 	if err != nil {
 		return dto.TokenDTO{}, err
@@ -64,6 +69,10 @@ func (s *UserService) FindOne(ctx context.Context, id string) (domain.User, erro
 	}
 
 	return s.repository.FindOne(ctx, oid)
+}
+
+func (s *UserService) FindByEmail(ctx context.Context, email string) (domain.User, error) {
+	return s.repository.FindByEmail(ctx, email)
 }
 
 func (s *UserService) FindAll(ctx context.Context, limit, offset, filter, sortBy string) (u []domain.User, err error) {
@@ -99,6 +108,12 @@ func (s *UserService) Update(ctx context.Context, userDTO dto.UpdateUserDTO) err
 
 	if !dto.ValidUpdateUserDTO(userDTO) {
 		return fmt.Errorf("Invalid userDTO parameters")
+	}
+
+	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
+		if !errors.Is(err, mongo.ErrNoDocuments) {
+			return err
+		}
 	}
 
 	passwordHash, err := s.hasher.Hash(userDTO.Password)

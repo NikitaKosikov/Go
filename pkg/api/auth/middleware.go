@@ -13,30 +13,32 @@ const (
 	BasicURL            = "/api"
 	Version             = "/v1"
 	authorizationHeader = "Authorization"
+	userURLAPI          = "http://localhost:4000/api/v1/users/:id"
+	refreshTokenURI     = "/auth/refresh"
 )
 
 func (m *Manager) VerifyJWTMiddleware(roles ...string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		jwtToken, err := parseAuthHeader(ctx)
 		if err != nil {
-			ctx.Next() 
+			ctx.Next()
 		}
 		userid := ctx.Param(IdNameURL)
 		claims := &Claims{}
 		token, err := m.GetTokenFromString(jwtToken, claims)
 		if err != nil {
-			ctx.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/api/v1/users/"+userid+"/auth/refresh")
+			ctx.Redirect(http.StatusTemporaryRedirect, userURLAPI+userid+refreshTokenURI)
 			return
 		}
 		if err := m.ValidateToken(token, claims); err != nil {
 			ctx.Status(http.StatusForbidden)
 			ctx.Writer.Write([]byte(err.Error()))
-			ctx.Next() 
+			ctx.Next()
 		}
 		if !hasPermission(roles, claims, userid) {
 			ctx.Status(http.StatusForbidden)
 			ctx.Writer.Write([]byte("Forbidden"))
-			ctx.Next() 
+			ctx.Next()
 		}
 		return
 	}
@@ -47,7 +49,7 @@ func parseAuthHeader(ctx *gin.Context) (string, error) {
 		return "", fmt.Errorf("empty auth header")
 	}
 	authHeader := strings.Split(ctx.GetHeader(authorizationHeader), PrefixToken)
-	if len(authHeader) != 2{
+	if len(authHeader) != 2 {
 		return "", fmt.Errorf("invalid auth header")
 	}
 	if len(authHeader[1]) == 0 {

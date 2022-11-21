@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 	"test/internal/config"
 	"time"
 
@@ -23,7 +24,7 @@ func NewClient(mc config.MongodbConfig) (db *mongo.Client, err error) {
 
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to fetch mongo client, err: %v", err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
@@ -31,11 +32,11 @@ func NewClient(mc config.MongodbConfig) (db *mongo.Client, err error) {
 
 	err = client.Connect(ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to start background to mongo client, err: %v", err)
 	}
 
 	if err = client.Ping(context.Background(), nil); err != nil {
-		return nil, err
+		return nil,  fmt.Errorf("failed to connect mongo, err: %v", err)
 	}
 
 	return client, nil

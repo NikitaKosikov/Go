@@ -168,6 +168,10 @@ func (h *Handler) Update(ctx *gin.Context) {
 
 	err = h.services.Users.Update(ctx.Request.Context(), userDTO)
 	if err != nil {
+		if errors.Is(err, domain.ErrUserAlreadyExists) {
+			newResponse(ctx, http.StatusBadRequest, err.Error())
+			return
+		}
 		newResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}

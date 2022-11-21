@@ -96,6 +96,21 @@ func (mr *MockUsersMockRecorder) FindAll(ctx, limit, offset, filter, sortBy inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockUsers)(nil).FindAll), ctx, limit, offset, filter, sortBy)
 }
 
+// FindByEmail mocks base method.
+func (m *MockUsers) FindByEmail(ctx context.Context, email string) (domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByEmail", ctx, email)
+	ret0, _ := ret[0].(domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByEmail indicates an expected call of FindByEmail.
+func (mr *MockUsersMockRecorder) FindByEmail(ctx, email interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByEmail", reflect.TypeOf((*MockUsers)(nil).FindByEmail), ctx, email)
+}
+
 // FindOne mocks base method.
 func (m *MockUsers) FindOne(ctx context.Context, id string) (domain.User, error) {
 	m.ctrl.T.Helper()

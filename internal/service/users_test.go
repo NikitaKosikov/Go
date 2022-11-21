@@ -69,6 +69,20 @@ func TestUserRepository_Create(t *testing.T) {
 			},
 		},
 		{
+			name:    "User already exists",
+			userDTO: dto.CreateUserDTO{Email: "test@test.ru", Password: "test1234"},
+			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(dto.TokenDTO{}, domain.ErrUserAlreadyExists)
+			},
+			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
+				return []func(t *testing.T, err error, i ...interface{}){
+					func(t *testing.T, err error, i ...interface{}) {
+						assert.ErrorAs(t, err, domain.ErrUserAlreadyExists)
+					},
+				}
+			},
+		},
+		{
 			name:             "Email Invalid",
 			userDTO:          dto.CreateUserDTO{Email: "testest.ru", Password: "test1234"},
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {},
@@ -198,7 +212,7 @@ func TestUserRepository_FindOne(t *testing.T) {
 			name: "Repository Failure",
 			id:   "000000000000",
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
-				dbmock.EXPECT().Create(context.Background(), gomock.Any()).Return(primitive.ObjectID{}, fmt.Errorf("repository failure"))
+				dbmock.EXPECT().FindOne(context.Background(), gomock.Any()).Return(primitive.ObjectID{}, fmt.Errorf("repository failure"))
 			},
 			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
 				return []func(t *testing.T, err error, i ...interface{}){
@@ -220,6 +234,73 @@ func TestUserRepository_FindOne(t *testing.T) {
 
 			for _, assert := range testCase.assertServiceTests() {
 				assert(t, err, testCase.expectedResult, actualToken)
+			}
+		})
+	}
+}
+
+func TestUserRepository_FindByEmail(t *testing.T) {
+	userService, userRepoMock := mockUserService(t)
+	type mockRepoBehavior func(dbmock *db_mocks.MockUserRepository)
+
+	testTable := []struct {
+		name               string
+		email                 string
+		expectedResult     domain.User
+		mockRepoBehavior   mockRepoBehavior
+		assertServiceTests func() []func(t *testing.T, err error, i ...interface{})
+	}{
+		{
+			name: "OK",
+			email:   "test@test.ru",
+			expectedResult: domain.User{
+				Email: "test@test.ru",
+			},
+			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{Email: "test@test.ru"}, nil)
+			},
+			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
+				return []func(t *testing.T, err error, i ...interface{}){
+					func(t *testing.T, err error, i ...interface{}) {
+						assert.Equal(t, i[0], i[1])
+					},
+					func(t *testing.T, err error, i ...interface{}) {
+						assert.Nil(t, err)
+					},
+				}
+			},
+		},
+
+		{
+			name: "Repository Failure",
+			email:   "test@test.ru",
+			expectedResult: domain.User{},
+			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(domain.User{}, fmt.Errorf("repository failure"))
+			},
+			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
+				return []func(t *testing.T, err error, i ...interface{}){
+					func(t *testing.T, err error, i ...interface{}) {
+						assert.Equal(t, i[0], i[1])
+					},
+					func(t *testing.T, err error, i ...interface{}) {
+						assert.Error(t, err, "repository failure")
+					},
+				}
+			},
+		},
+	}
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			c := gomock.NewController(t)
+			defer c.Finish()
+
+			testCase.mockRepoBehavior(userRepoMock)
+
+			user, err := userService.FindByEmail(context.Background(), testCase.email)
+
+			for _, assert := range testCase.assertServiceTests() {
+				assert(t, err, testCase.expectedResult, user)
 			}
 		})
 	}
@@ -340,7 +421,7 @@ func TestUserRepository_FindAll(t *testing.T) {
 				}
 			},
 		},
-		//TODO: filter error inccorect
+	
 		{
 			name:             "Filter Signutare Invalid",
 			limit:            "2",
@@ -445,6 +526,26 @@ func TestUserRepository_Update(t *testing.T) {
 				return []func(t *testing.T, err error, i ...interface{}){
 					func(t *testing.T, err error, i ...interface{}) {
 						assert.Nil(t, err)
+					},
+				}
+			},
+		},
+		{
+			name: "User with this email already exist",
+
+			userDTO: dto.UpdateUserDTO{
+				Id:       primitive.NewObjectID().Hex(),
+				Email:    "test@test.ru",
+				Password: "test1234",
+			},
+
+			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
+				dbmock.EXPECT().FindByEmail(context.Background(), gomock.Any()).Return(dto.TokenDTO{}, domain.ErrUserAlreadyExists)
+			},
+			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
+				return []func(t *testing.T, err error, i ...interface{}){
+					func(t *testing.T, err error, i ...interface{}) {
+						assert.ErrorAs(t, err, domain.ErrUserAlreadyExists)
 					},
 				}
 			},

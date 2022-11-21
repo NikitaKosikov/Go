@@ -14,12 +14,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-const (
-	descOrderKey   = "desc"
-	descMongoDbKey = "-1"
-	ascMongoDbKey  = "1"
-)
-
 var _ UserRepository = &userRepository{}
 
 type userRepository struct {
@@ -98,6 +92,24 @@ func (d *userRepository) FindOne(ctx context.Context, oid primitive.ObjectID) (u
 
 	if err := result.Decode(&u); err != nil {
 		return u, fmt.Errorf("failed to decode user by oid=%s, from DB due to error: %v", oid, err)
+	}
+
+	return u, nil
+}
+
+func (d *userRepository) FindByEmail(ctx context.Context, email string) (u domain.User, err error) {
+	filter := bson.M{"email": email}
+	result := d.collection.FindOne(ctx, filter)
+
+	if result.Err() != nil {
+		if errors.Is(result.Err(), mongo.ErrNoDocuments) {
+			return u, domain.ErrUserNotFound
+		}
+		return u, fmt.Errorf("failed to find user by email=%s, due to error:=%v", email, result.Err())
+	}
+
+	if err := result.Decode(&u); err != nil {
+		return u, fmt.Errorf("failed to decode user by email=%s, from DB due to error: %v", email, err)
 	}
 
 	return u, nil

@@ -13,6 +13,7 @@ import (
 type UserRepository interface {
 	Create(ctx context.Context, user domain.User) (primitive.ObjectID, error)
 	FindOne(ctx context.Context, oid primitive.ObjectID) (domain.User, error)
+	FindByEmail(ctx context.Context, email string) (domain.User, error)
 	FindAll(ctx context.Context, pagination api.Pagination, filters []api.Filters, sortOptions []api.Options) (u []domain.User, err error)
 	Update(ctx context.Context, user domain.User) error
 	Delete(ctx context.Context, oid primitive.ObjectID) error

@@ -8,6 +8,7 @@ import (
 
 const (
 	FilterByParametersURL  = "filter"
+	FilterPattern          = "\\[.+\\]="
 	FiltersSeparator       = ","
 	filterFieldValueRegex  = "\\[.+\\]="
 	opearatorEqual         = "eq"
@@ -38,26 +39,18 @@ func ParseFilters(filter string) ([]Filters, error) {
 	return filteres, nil
 }
 
-// TODO:
 func appendFilters(flt []string) ([]Filters, error) {
-	re := regexp.MustCompile("\\[.+\\]=")
 	filters := make([]Filters, 0)
 	for _, f := range flt {
-
-		fieldValue := re.Split(f, -1)
-
-		if len(fieldValue) != 2 {
-			return []Filters{}, apierrors.ErrFilterInvalid
+		field, value, err := extractFieldAndValue(f)
+		if err != nil {
+			return []Filters{}, err
 		}
 
-		field, value := fieldValue[0], fieldValue[1]
-
-		start := strings.Index(f, "[")
-		end := strings.Index(f, "]")
-		if start == -1 || end == -1 {
-			return []Filters{}, apierrors.ErrFilterInvalid
+		operation, err := extractOperation(f)
+		if err != nil {
+			return []Filters{}, err
 		}
-		operation := f[start+1 : end]
 
 		if err := validOperation(operation); err != nil {
 			return []Filters{}, err
@@ -70,6 +63,27 @@ func appendFilters(flt []string) ([]Filters, error) {
 		})
 	}
 	return filters, nil
+}
+
+func extractFieldAndValue(filter string) (string, string, error) {
+	filterRegex := regexp.MustCompile(FilterPattern)
+	fieldValue := filterRegex.Split(filter, -1)
+
+	if len(fieldValue) != 2 {
+		return "", "", apierrors.ErrFilterInvalid
+	}
+
+	field, value := fieldValue[0], fieldValue[1]
+	return field, value, nil
+}
+
+func extractOperation(filter string) (string, error) {
+	start := strings.Index(filter, "[")
+	end := strings.Index(filter, "]")
+	if start == -1 || end == -1 {
+		return "", apierrors.ErrFilterInvalid
+	}
+	return filter[start+1 : end], nil
 }
 
 func validOperation(operation string) error {

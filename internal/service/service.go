@@ -17,6 +17,7 @@ import (
 type Users interface {
 	Create(ctx context.Context, userDTO dto.CreateUserDTO) (dto.TokenDTO, error)
 	FindOne(ctx context.Context, id string) (domain.User, error)
+	FindByEmail(ctx context.Context, email string) (domain.User, error)
 	FindAll(ctx context.Context, limit, offset, filter, sortBy string) (u []domain.User, err error)
 	Update(ctx context.Context, userDTO dto.UpdateUserDTO) error
 	Delete(ctx context.Context, id string) error
