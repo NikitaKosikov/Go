@@ -219,7 +219,7 @@ func TestUserRepository_FindOne(t *testing.T) {
 			name: "Repository Failure",
 			id:   "000000000000",
 			mockRepoBehavior: func(dbmock *db_mocks.MockUserRepository) {
-				dbmock.EXPECT().FindOne(context.Background(), gomock.Any()).Return(primitive.ObjectID{}, fmt.Errorf("repository failure"))
+				dbmock.EXPECT().FindOne(context.Background(), gomock.Any()).Return(domain.User{}, fmt.Errorf("repository failure"))
 			},
 			assertServiceTests: func() []func(t *testing.T, err error, i ...interface{}) {
 				return []func(t *testing.T, err error, i ...interface{}){
