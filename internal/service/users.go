@@ -110,12 +110,15 @@ func (s *UserService) Update(ctx context.Context, userDTO dto.UpdateUserDTO) err
 		return fmt.Errorf("Invalid userDTO parameters")
 	}
 
-	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
+	_, err := s.FindByEmail(ctx, userDTO.Email)
+	if err!=nil {
 		if !errors.Is(err, mongo.ErrNoDocuments) {
 			return err
 		}
+	}else {
+		return domain.ErrUserAlreadyExists
 	}
-
+	
 	passwordHash, err := s.hasher.Hash(userDTO.Password)
 	if err != nil {
 		return err
