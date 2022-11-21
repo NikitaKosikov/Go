@@ -43,8 +43,13 @@ func (s *UserService) Create(ctx context.Context, userDTO dto.CreateUserDTO) (dt
 	}
 
 	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
+		if !errors.Is(err, mongo.ErrNoDocuments) {
+			return dto.TokenDTO{}, err
+		}
+	} else {
 		return dto.TokenDTO{}, domain.ErrUserAlreadyExists
 	}
+
 	passwordHash, err := s.hasher.Hash(userDTO.Password)
 	if err != nil {
 		return dto.TokenDTO{}, err
@@ -110,15 +115,14 @@ func (s *UserService) Update(ctx context.Context, userDTO dto.UpdateUserDTO) err
 		return fmt.Errorf("Invalid userDTO parameters")
 	}
 
-	_, err := s.FindByEmail(ctx, userDTO.Email)
-	if err!=nil {
+	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
 		if !errors.Is(err, mongo.ErrNoDocuments) {
 			return err
 		}
-	}else {
+	} else {
 		return domain.ErrUserAlreadyExists
 	}
-	
+
 	passwordHash, err := s.hasher.Hash(userDTO.Password)
 	if err != nil {
 		return err
