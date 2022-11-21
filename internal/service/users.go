@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"test/internal/domain"
 	"test/internal/repository"
 	"test/internal/service/dto"
@@ -117,9 +118,11 @@ func (s *UserService) Update(ctx context.Context, userDTO dto.UpdateUserDTO) err
 
 	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
 		if !errors.Is(err, domain.ErrUserNotFound) {
+			log.Default().Print("id pm")
 			return err
 		}
 	} else {
+		log.Default().Print("id param")
 		return domain.ErrUserAlreadyExists
 	}
 
@@ -139,6 +142,7 @@ func (s *UserService) Update(ctx context.Context, userDTO dto.UpdateUserDTO) err
 func (s *UserService) Delete(ctx context.Context, id string) error {
 	oid, err := params.ParseIdToObjectID(id)
 	if err != nil {
+		log.Default().Print("id param")
 		return err
 	}
 
