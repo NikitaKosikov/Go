@@ -118,11 +118,9 @@ func (s *UserService) Update(ctx context.Context, userDTO dto.UpdateUserDTO) err
 
 	if _, err := s.FindByEmail(ctx, userDTO.Email); err != nil {
 		if !errors.Is(err, domain.ErrUserNotFound) {
-			log.Default().Print("id pm")
 			return err
 		}
 	} else {
-		log.Default().Print("id param")
 		return domain.ErrUserAlreadyExists
 	}
 
